@@ -84,7 +84,7 @@ router.delete('/:id', async (req, res) => {
         id: req.params.id
       }
     });
-    res.status(200).json({message: `Successfully Deleted Tag with ID: ${req.params.id}`})
+    res.status(200).json({message: `Successfully Deleted Tag with ID: ${req.params.id}`, deleted: tag});
   } catch (error) {
     res.status(500).json({ error });
   }

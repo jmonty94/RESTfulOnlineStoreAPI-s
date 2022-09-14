@@ -1,5 +1,6 @@
 const router = require('express').Router();
 const { Category, Product } = require('../../models');
+const { afterUpdate } = require('../../models/Product');
 
 // The `/api/categories` endpoint
 
@@ -63,12 +64,12 @@ router.put('/:id', async (req, res) => {
     if (!category) {
       res.status(404).json({ error: `No matching Category with id: ${categoryId}` });
     }
-    const updatedCategory = await Category.update(
+    await Category.update(
       {category_name: categoryName},
       {where: {id: categoryId}}
       )
-    console.log(updatedCategory);
-    res.json({ message: `Category with an ID of ${categoryId} was updated`} )
+    const updatedCategory = await Category.findByPk(categoryId)
+    res.json({ original: category, updated: updatedCategory} )
   } catch (error) {
     res.status(500).json({ error });
   }
@@ -87,7 +88,7 @@ router.delete('/:id', async (req, res) => {
         id: req.params.id,
       }
     });
-    res.status(200).json({message: `Successfully Deleted Category with ID: ${req.params.id}`})
+    res.status(200).json({message: `Successfully Deleted Category with ID: ${req.params.id}`, deleted: category})
   } catch (error) {
     res.status(500).json({ error });
   }
